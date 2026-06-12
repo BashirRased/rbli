@@ -1,0 +1,620 @@
+@use "sass:map";
+@use "sass:math";
+
+/*!
+ * RBLI Layout
+ * Author: Bashir Rased
+ * Website: https://bashirrased.dev
+ * GitHub: https://github.com/BashirRased/rbli
+ *
+ * License: MIT
+ * Copyright (c) 2026 Bashir Rased
+ */
+
+/* =========================
+   Variables
+========================= */
+$flex-cols: 12;
+$offset-cols: 11;
+$gutter: 30px;
+
+$breakpoints: (
+	sm: 576px,
+	md: 768px,
+	lg: 992px,
+	xl: 1200px,
+	xxl: 1400px,
+	"3xl": 1600px
+);
+
+$container-max: (
+	sm: 540px,
+	md: 720px,
+	lg: 960px,
+	xl: 1140px,
+	xxl: 1320px,
+	"3xl": 1432px
+);
+
+$spacers: (
+	0: 0,
+	1: .25rem,
+	2: .5rem,
+	3: 1rem,
+	4: 1.5rem,
+	5: 3rem,
+	"auto": auto
+);
+
+$gaps: (
+	0: 0,
+	1: .25rem,
+	2: .5rem,
+	3: 1rem,
+	4: 1.5rem,
+	5: 3rem
+);
+
+$orders: (
+	"first": -1,
+	0: 0,
+	1: 1,
+	2: 2,
+	3: 3,
+	4: 4,
+	5: 5,
+	"last": 6
+);
+
+$flex-utils: (
+	"flex-direction": (
+		"row": row,
+		"column": column,
+		"row-reverse": row-reverse,
+		"column-reverse": column-reverse
+	),
+
+	"flex-wrap": (
+		"wrap": wrap,
+		"nowrap": nowrap,
+		"wrap-reverse": wrap-reverse
+	),
+
+	"justify-content": (
+		"start": flex-start,
+		"end": flex-end,
+		"center": center,
+		"between": space-between,
+		"around": space-around,
+		"evenly": space-evenly
+	),
+
+	"align-items": (
+		"start": flex-start,
+		"end": flex-end,
+		"center": center,
+		"baseline": baseline,
+		"stretch": stretch
+	),
+
+	"align-content": (
+		"start": flex-start,
+		"end": flex-end,
+		"center": center,
+		"baseline": baseline,
+		"stretch": stretch
+	),
+
+	"align-self": (
+		"auto": auto,
+		"start": flex-start,
+		"end": flex-end,
+		"center": center,
+		"baseline": baseline,
+		"stretch": stretch
+	),
+
+	"flex-grow": (
+		0: 0,
+		1: 1
+	),
+
+	"flex-shrink": (
+		0: 0,
+		1: 1
+	)
+);
+
+$float-utils: (
+	"float": (
+		"start": left,
+		"end": right,
+		"none": none
+	),
+	"text-align": (
+		"start": left,
+		"end": right,
+		"none": none
+	),
+);
+
+$display-utils: (
+	"display": (
+		"block": block,
+		"inline": inline,
+		"inline-block": inline-block,
+		"grid": grid,
+		"inline-grid": inline-grid,
+		"table": table,
+		"table-row": table-row,
+		"table-cell": table-cell,
+		"flex": flex,
+		"inline-flex": inline-flex,
+		"none": none
+	),
+);
+
+$object-fit-utils: (
+	"object-fit": (
+		"contain": contain,
+		"cover": cover,
+		"fill": fill,
+		"scale": scale-down,
+		"none": none,
+	),
+);
+
+@function span($n) {
+	@return (100% / $flex-cols) * $n;
+	@return (100% / $offset-cols) * $n;
+}
+
+/* =========================
+   BASE
+========================= */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	:root {
+		scroll-behavior: smooth;
+	}
+}
+
+/* =========================
+   UTILITIES (BASIC)
+========================= */
+.list-unstyled {
+	list-style: none;
+	padding: 0;
+}
+
+.img-fluid {
+	max-width: 100%;
+	height: auto;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+.container,
+.container-fluid {
+	width: 100%;
+	margin: 0 auto;
+	padding-inline: calc(var(--rbli-gutter, 30px) * 0.5);
+}
+
+.container-fluid {
+	--rbli-gutter: 60px;
+}
+
+
+// @each $bp, $width in $container-max {
+// 	$min: $breakpoints[$bp];
+
+// 	@media (min-width: $min) {
+// 		.container {
+// 			max-width: $width;
+// 		}
+// 	}
+// }
+
+/* =========================
+   ROW
+========================= */
+.row {
+	display: flex;
+	flex-wrap: wrap;
+	margin-inline: -15px;
+
+	>* {
+		width: 100%;
+		padding-inline: 15px;
+	}
+}
+
+/* ==================================
+	COLUMNS
+================================== */
+.col {
+	flex: 1 0 0;
+}
+
+.col-auto {
+	width: auto;
+	flex: 0 0 auto;
+}
+
+@for $i from 1 through $flex-cols {
+	.col-#{$i} {
+		flex: 0 0 auto;
+		width: span($i);
+	}
+}
+
+@each $name, $bp in $breakpoints {
+	@media (min-width: $bp) {
+
+		.col-#{$name} {
+			flex: 1 0 0;
+		}
+
+		.col-#{$name}-auto {
+			width: auto;
+			flex: 0 0 auto;
+		}
+
+		@for $i from 1 through $flex-cols {
+			.col-#{$name}-#{$i} {
+				width: span($i);
+				flex: 0 0 auto;
+			}
+		}
+	}
+}
+
+/* ==================================
+	ROW COLUMNS
+================================== */
+.row-cols-auto {
+	flex: 0 0 auto;
+    width: auto;
+}
+
+@for $i from 1 through $flex-cols {
+	.row-cols-#{$i} {
+		flex: 0 0 auto;
+		width: span($i);
+	}
+}
+
+@each $name, $bp in $breakpoints {
+	@media (min-width: $bp) {
+
+		.row-cols-#{$name} {
+			flex: 1 0 0;
+		}
+
+		.row-cols-#{$name}-auto {
+			width: auto;
+			flex: 0 0 auto;
+		}
+
+		@for $i from 1 through $flex-cols {
+			.row-cols-#{$name}-#{$i} {
+				width: span($i);
+				flex: 0 0 auto;
+			}
+		}
+	}
+}
+
+/* ==================================
+	COLUMN OFFSET ( LEFT + RIGHT )
+================================== */
+@for $i from 1 through $offset-cols {
+	.offset-#{$i} {
+		margin-left: span($i);
+	}
+
+	.offset-r-#{$i} {
+		margin-right: span($i);
+	}
+}
+
+@each $name, $bp in $breakpoints {
+	@media (min-width: $bp) {
+		@for $i from 1 through $offset-cols {
+			.offset-#{$name}-#{$i} {
+				margin-left: span($i);
+			}
+
+			.offset-r-#{$name}-#{$i} {
+				margin-left: span($i);
+			}
+		}
+	}
+}
+
+/* ==================================
+	FLEX CSS
+================================== */
+@each $property, $values in $flex-utils {
+	@each $key, $val in $values {
+		.#{$property}-#{$key} {
+			#{$property}: $val;
+		}
+	}
+}
+
+@each $name, $bp in $breakpoints {
+	@media (min-width: $bp) {
+		@each $property, $values in $flex-utils {
+			@each $key, $val in $values {
+				.#{$property}-#{$name}-#{$key} {
+					#{$property}: $val;
+				}
+			}
+		}
+	}
+}
+
+/* ==================================
+	GAP CSS
+================================== */
+@each $key, $val in $gaps {
+	.gap-#{$key} {
+		gap: $val;
+	}
+	.row-gap-#{$key} {
+		row-gap: $val;
+	}
+	.column-gap-#{$key} {
+		-moz-column-gap: $val;
+		column-gap: $val;
+	}
+}
+
+@each $name, $bp in $breakpoints {
+	@media (min-width: $bp) {
+		@each $key, $val in $gaps {
+			.gap-#{$name}-#{$key} {
+				gap: $val;
+			}
+			.row-gap-#{$name}-#{$key} {
+				row-gap: $val;
+			}
+			.column-gap-#{$name}-#{$key} {
+				-moz-column-gap: $val;
+				column-gap: $val;
+			}
+		}
+	}
+}
+
+/* ==================================
+	FLOAT CSS
+================================== */
+@each $property, $values in $float-utils {
+	@each $key, $val in $values {
+		.#{$property}-#{$key} {
+			#{$property}: $val;
+		}
+	}
+}
+
+@each $name, $bp in $breakpoints {
+	@media (min-width: $bp) {
+		@each $property, $values in $float-utils {
+			@each $key, $val in $values {
+				.#{$property}-#{$name}-#{$key} {
+					#{$property}: $val;
+				}
+			}
+		}
+	}
+}
+
+/* ==================================
+	DISPLAY CSS
+================================== */
+@each $property, $values in $display-utils {
+	@each $key, $val in $values {
+		.#{$property}-#{$key} {
+			#{$property}: $val;
+		}
+	}
+}
+
+@each $name, $bp in $breakpoints {
+	@media (min-width: $bp) {
+		@each $property, $values in $display-utils {
+			@each $key, $val in $values {
+				.#{$property}-#{$name}-#{$key} {
+					#{$property}: $val;
+				}
+			}
+		}
+	}
+}
+
+/* ==================================
+	OBJECT FIT CSS
+================================== */
+@each $property, $values in $object-fit-utils {
+	@each $key, $val in $values {
+		.#{$property}-#{$key} {
+			#{$property}: $val;
+		}
+	}
+}
+
+@each $name, $bp in $breakpoints {
+	@media (min-width: $bp) {
+		@each $property, $values in $object-fit-utils {
+			@each $key, $val in $values {
+				.#{$property}-#{$name}-#{$key} {
+					-o-#{$property}: $val;
+					#{$property}: $val;
+				}
+			}
+		}
+	}
+}
+
+/* ==================================
+	ORDER CSS
+================================== */
+@each $key, $val in $orders {
+	.order-#{$key} {
+		order: $val;
+	}
+}
+
+@each $name, $bp in $breakpoints {
+	@media (min-width: $bp) {
+		@each $key, $val in $orders {
+			.order-#{$name}-#{$key} {
+				order: $val;
+			}
+		}
+	}
+}
+
+/* ==================================
+	MARGIN, PADDING CSS
+================================== */
+@each $key, $val in $spacers {
+	.m-#{$key} {
+		margin: $val;
+	}
+
+	.mx-#{$key} {
+		margin-right: $val;
+		margin-left: $val;
+	}
+
+	.my-#{$key} {
+		margin-top: $val;
+		margin-bottom: $val;
+	}
+
+	.mt-#{$key} {
+		margin-top: $val;
+	}
+
+	.me-#{$key} {
+		margin-right: $val;
+	}
+
+	.mb-#{$key} {
+		margin-bottom: $val;
+	}
+
+	.ms-#{$key} {
+		margin-left: $val;
+	}
+
+	.p-#{$key} {
+		padding: $val;
+	}
+
+	.px-#{$key} {
+		padding-right: $val;
+		padding-left: $val;
+	}
+
+	.py-#{$key} {
+		padding-top: $val;
+		padding-bottom: $val;
+	}
+
+	.pt-#{$key} {
+		padding-top: $val;
+	}
+
+	.pe-#{$key} {
+		padding-right: $val;
+	}
+
+	.pb-#{$key} {
+		padding-bottom: $val;
+	}
+
+	.ps-#{$key} {
+		padding-left: $val;
+	}
+}
+
+@each $name, $bp in $breakpoints {
+	@media (min-width: $bp) {
+		@each $key, $val in $spacers {
+			.m-#{$name}-#{$key} {
+				margin: $val;
+			}
+
+			.mx-#{$name}-#{$key} {
+				margin-right: $val;
+				margin-left: $val;
+			}
+
+			.my-#{$name}-#{$key} {
+				margin-top: $val;
+				margin-bottom: $val;
+			}
+
+			.mt-#{$name}-#{$key} {
+				margin-top: $val;
+			}
+
+			.me-#{$name}-#{$key} {
+				margin-right: $val;
+			}
+
+			.mb-#{$name}-#{$key} {
+				margin-bottom: $val;
+			}
+
+			.ms-#{$name}-#{$key} {
+				margin-left: $val;
+			}
+
+			.p-#{$name}-#{$key} {
+				padding: $val;
+			}
+
+			.px-#{$name}-#{$key} {
+				padding-right: $val;
+				padding-left: $val;
+			}
+
+			.py-#{$name}-#{$key} {
+				padding-top: $val;
+				padding-bottom: $val;
+			}
+
+			.pt-#{$name}-#{$key} {
+				padding-top: $val;
+			}
+
+			.pe-#{$name}-#{$key} {
+				padding-right: $val;
+			}
+
+			.pb-#{$name}-#{$key} {
+				padding-bottom: $val;
+			}
+
+			.ps-#{$name}-#{$key} {
+				padding-left: $val;
+			}
+		}
+	}
+}
