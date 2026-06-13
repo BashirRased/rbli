@@ -55,6 +55,16 @@ $gaps: (
 	5: 3rem
 );
 
+$radius: (
+	0: 0,
+	1: 4px,
+	2: 8px,
+	3: 12px,
+	4: 16px,
+	5: 20px,
+	6: 24px
+);
+
 $orders: (
 	"first": -1,
 	0: 0,
@@ -64,6 +74,63 @@ $orders: (
 	4: 4,
 	5: 5,
 	"last": 6
+);
+
+$height-width-utils: (
+	"width": (
+		"auto": auto,
+		0: 0,
+		25: 25%,
+		50: 50%,
+		75: 75%,
+		100: 100%,
+		"100vh": 100vh,
+	),
+	"max-width": (
+		"auto": auto,
+		0: 0,
+		25: 25%,
+		50: 50%,
+		75: 75%,
+		100: 100%,
+		"100vh": 100vh,
+	),
+	"min-width": (
+		"auto": auto,
+		0: 0,
+		25: 25%,
+		50: 50%,
+		75: 75%,
+		100: 100%,
+		"100vh": 100vh,
+	),
+	"height": (
+		"auto": auto,
+		0: 0,
+		25: 25%,
+		50: 50%,
+		75: 75%,
+		100: 100%,
+		"100vh": 100vh,
+	),
+	"max-height": (
+		"auto": auto,
+		0: 0,
+		25: 25%,
+		50: 50%,
+		75: 75%,
+		100: 100%,
+		"100vh": 100vh,
+	),
+	"min-height": (
+		"auto": auto,
+		0: 0,
+		25: 25%,
+		50: 50%,
+		75: 75%,
+		100: 100%,
+		"100vh": 100vh,
+	),
 );
 
 $flex-utils: (
@@ -154,6 +221,26 @@ $display-utils: (
 	),
 );
 
+$z-index-utils: (
+	"z-index": (
+		"n1": -1,
+		0: 0,
+		1: 9,
+		2: 99,
+		3: 999,
+		4: 9999,
+		5: 99999,
+		6: 99999,
+	),
+);
+
+$visible-utils: (
+	"visibility": (
+		"visible": visible,
+		"invisible": hidden,
+	),
+);
+
 $object-fit-utils: (
 	"object-fit": (
 		"contain": contain,
@@ -165,8 +252,8 @@ $object-fit-utils: (
 );
 
 @function span($n) {
-	@return (100% / $flex-cols) * $n;
-	@return (100% / $offset-cols) * $n;
+	@return math.div(100%, $flex-cols) * $n;
+	@return math.div(100%, $offset-cols) * $n;
 }
 
 /* =========================
@@ -201,6 +288,74 @@ body {
 	height: auto;
 }
 
+.text-decoration-none {
+  text-decoration: none;
+}
+
+.text-decoration-underline {
+  text-decoration: underline;
+}
+
+.text-decoration-line-through {
+  text-decoration: line-through;
+}
+
+.text-lowercase {
+  text-transform: lowercase;
+}
+
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+.text-capitalize {
+  text-transform: capitalize;
+}
+
+.text-wrap {
+  white-space: normal;
+}
+
+.text-nowrap {
+  white-space: nowrap;
+}
+
+.font-monospace {
+  font-family: var(--rbli-font-monospace);
+}
+
+.fw-light {
+  font-weight: 300;
+}
+
+.fw-normal {
+  font-weight: 400;
+}
+
+.fw-medium {
+  font-weight: 500;
+}
+
+.fw-semibold {
+  font-weight: 600;
+}
+
+.fw-bold {
+  font-weight: 700;
+}
+
+.fw-extra-bold {
+  font-weight: 800;
+}
+
+.fw-black {
+  font-weight: 900;
+}
+
+.fst-italic {
+  font-style: italic;
+}
+
 /* =========================
    CONTAINER
 ========================= */
@@ -215,16 +370,13 @@ body {
 	--rbli-gutter: 60px;
 }
 
-
-// @each $bp, $width in $container-max {
-// 	$min: $breakpoints[$bp];
-
-// 	@media (min-width: $min) {
-// 		.container {
-// 			max-width: $width;
-// 		}
-// 	}
-// }
+@each $bp, $width in $container-max {
+	@media (min-width: map.get($breakpoints, $bp)) {
+		.container {
+			max-width: $width;
+		}
+	}
+}
 
 /* =========================
    ROW
@@ -367,6 +519,29 @@ body {
 }
 
 /* ==================================
+	HEIGHT & WIDTH CSS
+================================== */
+@each $property, $values in $height-width-utils {
+	@each $key, $val in $values {
+		.#{$property}-#{$key} {
+			#{$property}: $val;
+		}
+	}
+}
+
+@each $name, $bp in $breakpoints {
+	@media (min-width: $bp) {
+		@each $property, $values in $height-width-utils {
+			@each $key, $val in $values {
+				.#{$property}-#{$name}-#{$key} {
+					#{$property}: $val;
+				}
+			}
+		}
+	}
+}
+
+/* ==================================
 	GAP CSS
 ================================== */
 @each $key, $val in $gaps {
@@ -394,6 +569,25 @@ body {
 			.column-gap-#{$name}-#{$key} {
 				-moz-column-gap: $val;
 				column-gap: $val;
+			}
+		}
+	}
+}
+
+/* ==================================
+	BORDER RADIUS CSS
+================================== */
+@each $key, $val in $radius {
+	.rounded-#{$key} {
+		border-radius: $val;
+	}
+}
+
+@each $name, $bp in $breakpoints {
+	@media (min-width: $bp) {
+		@each $key, $val in $radius {
+			.rounded-#{$name}-#{$key} {
+				border-radius: $val;
 			}
 		}
 	}
@@ -436,6 +630,52 @@ body {
 @each $name, $bp in $breakpoints {
 	@media (min-width: $bp) {
 		@each $property, $values in $display-utils {
+			@each $key, $val in $values {
+				.#{$property}-#{$name}-#{$key} {
+					#{$property}: $val;
+				}
+			}
+		}
+	}
+}
+
+/* ==================================
+	Z-INDEX CSS
+================================== */
+@each $property, $values in $z-index-utils {
+	@each $key, $val in $values {
+		.#{$property}-#{$key} {
+			#{$property}: $val;
+		}
+	}
+}
+
+@each $name, $bp in $breakpoints {
+	@media (min-width: $bp) {
+		@each $property, $values in $z-index-utils {
+			@each $key, $val in $values {
+				.#{$property}-#{$name}-#{$key} {
+					#{$property}: $val;
+				}
+			}
+		}
+	}
+}
+
+/* ==================================
+	VISIBLE CSS
+================================== */
+@each $property, $values in $visible-utils {
+	@each $key, $val in $values {
+		.#{$property}-#{$key} {
+			#{$property}: $val;
+		}
+	}
+}
+
+@each $name, $bp in $breakpoints {
+	@media (min-width: $bp) {
+		@each $property, $values in $visible-utils {
 			@each $key, $val in $values {
 				.#{$property}-#{$name}-#{$key} {
 					#{$property}: $val;
