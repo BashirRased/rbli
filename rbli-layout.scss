@@ -77,8 +77,7 @@ $orders: (
 );
 
 $height-width-utils: (
-	"width": (
-		"auto": auto,
+	"width": ("auto": auto,
 		0: 0,
 		25: 25%,
 		50: 50%,
@@ -86,8 +85,7 @@ $height-width-utils: (
 		100: 100%,
 		"100vh": 100vh,
 	),
-	"max-width": (
-		"auto": auto,
+	"max-width": ("auto": auto,
 		0: 0,
 		25: 25%,
 		50: 50%,
@@ -95,8 +93,7 @@ $height-width-utils: (
 		100: 100%,
 		"100vh": 100vh,
 	),
-	"min-width": (
-		"auto": auto,
+	"min-width": ("auto": auto,
 		0: 0,
 		25: 25%,
 		50: 50%,
@@ -104,8 +101,7 @@ $height-width-utils: (
 		100: 100%,
 		"100vh": 100vh,
 	),
-	"height": (
-		"auto": auto,
+	"height": ("auto": auto,
 		0: 0,
 		25: 25%,
 		50: 50%,
@@ -113,8 +109,7 @@ $height-width-utils: (
 		100: 100%,
 		"100vh": 100vh,
 	),
-	"max-height": (
-		"auto": auto,
+	"max-height": ("auto": auto,
 		0: 0,
 		25: 25%,
 		50: 50%,
@@ -122,8 +117,7 @@ $height-width-utils: (
 		100: 100%,
 		"100vh": 100vh,
 	),
-	"min-height": (
-		"auto": auto,
+	"min-height": ("auto": auto,
 		0: 0,
 		25: 25%,
 		50: 50%,
@@ -134,80 +128,59 @@ $height-width-utils: (
 );
 
 $flex-utils: (
-	"flex-direction": (
-		"row": row,
+	"flex-direction": ("row": row,
 		"column": column,
 		"row-reverse": row-reverse,
-		"column-reverse": column-reverse
-	),
+		"column-reverse": column-reverse),
 
-	"flex-wrap": (
-		"wrap": wrap,
+	"flex-wrap": ("wrap": wrap,
 		"nowrap": nowrap,
-		"wrap-reverse": wrap-reverse
-	),
+		"wrap-reverse": wrap-reverse),
 
-	"justify-content": (
-		"start": flex-start,
+	"justify-content": ("start": flex-start,
 		"end": flex-end,
 		"center": center,
 		"between": space-between,
 		"around": space-around,
-		"evenly": space-evenly
-	),
+		"evenly": space-evenly),
 
-	"align-items": (
+	"align-items": ("start": flex-start,
+		"end": flex-end,
+		"center": center,
+		"baseline": baseline,
+		"stretch": stretch),
+
+	"align-content": ("start": flex-start,
+		"end": flex-end,
+		"center": center,
+		"baseline": baseline,
+		"stretch": stretch),
+
+	"align-self": ("auto": auto,
 		"start": flex-start,
 		"end": flex-end,
 		"center": center,
 		"baseline": baseline,
-		"stretch": stretch
-	),
+		"stretch": stretch),
 
-	"align-content": (
-		"start": flex-start,
-		"end": flex-end,
-		"center": center,
-		"baseline": baseline,
-		"stretch": stretch
-	),
+	"flex-grow": (0: 0,
+		1: 1),
 
-	"align-self": (
-		"auto": auto,
-		"start": flex-start,
-		"end": flex-end,
-		"center": center,
-		"baseline": baseline,
-		"stretch": stretch
-	),
-
-	"flex-grow": (
-		0: 0,
-		1: 1
-	),
-
-	"flex-shrink": (
-		0: 0,
-		1: 1
-	)
+	"flex-shrink": (0: 0,
+		1: 1)
 );
 
 $float-utils: (
-	"float": (
-		"start": left,
+	"float": ("start": left,
 		"end": right,
-		"none": none
-	),
-	"text-align": (
-		"start": left,
+		"none": none),
+	"text-align": ("start": left,
 		"end": right,
-		"none": none
-	),
+		"none": none),
 );
 
 $display-utils: (
-	"display": (
-		"block": block,
+	"display": ("block": block,
 		"inline": inline,
 		"inline-block": inline-block,
 		"grid": grid,
@@ -217,13 +190,11 @@ $display-utils: (
 		"table-cell": table-cell,
 		"flex": flex,
 		"inline-flex": inline-flex,
-		"none": none
-	),
+		"none": none),
 );
 
 $z-index-utils: (
-	"z-index": (
-		"n1": -1,
+	"z-index": ("n1": -1,
 		0: 0,
 		1: 9,
 		2: 99,
@@ -235,15 +206,13 @@ $z-index-utils: (
 );
 
 $visible-utils: (
-	"visibility": (
-		"visible": visible,
+	"visibility": ("visible": visible,
 		"invisible": hidden,
 	),
 );
 
 $object-fit-utils: (
-	"object-fit": (
-		"contain": contain,
+	"object-fit": ("contain": contain,
 		"cover": cover,
 		"fill": fill,
 		"scale": scale-down,
@@ -252,8 +221,11 @@ $object-fit-utils: (
 );
 
 @function span($n) {
-	@return math.div(100%, $flex-cols) * $n;
-	@return math.div(100%, $offset-cols) * $n;
+  @return math.div(100%, $flex-cols) * $n;
+}
+
+@function offset-span($n) {
+  @return math.div(100%, $offset-cols) * $n;
 }
 
 /* =========================
@@ -283,77 +255,141 @@ body {
 	padding: 0;
 }
 
+.list-inline {
+	padding-left: 0;
+	list-style: none;
+}
+
+.list-inline-item {
+	display: inline-block;
+}
+
+.list-inline-item:not(:last-child) {
+	margin-right: 0.5rem;
+}
+
 .img-fluid {
 	max-width: 100%;
 	height: auto;
 }
 
+.clearfix::after {
+  display: block;
+  clear: both;
+  content: "";
+}
+
 .text-decoration-none {
-  text-decoration: none;
+	text-decoration: none;
 }
 
 .text-decoration-underline {
-  text-decoration: underline;
+	text-decoration: underline;
 }
 
 .text-decoration-line-through {
-  text-decoration: line-through;
+	text-decoration: line-through;
 }
 
 .text-lowercase {
-  text-transform: lowercase;
+	text-transform: lowercase;
 }
 
 .text-uppercase {
-  text-transform: uppercase;
+	text-transform: uppercase;
 }
 
 .text-capitalize {
-  text-transform: capitalize;
+	text-transform: capitalize;
 }
 
 .text-wrap {
-  white-space: normal;
+	white-space: normal;
 }
 
 .text-nowrap {
-  white-space: nowrap;
+	white-space: nowrap;
 }
 
 .font-monospace {
-  font-family: var(--rbli-font-monospace);
+	font-family: var(--rbli-font-monospace);
 }
 
 .fw-light {
-  font-weight: 300;
+	font-weight: 300;
 }
 
 .fw-normal {
-  font-weight: 400;
+	font-weight: 400;
 }
 
 .fw-medium {
-  font-weight: 500;
+	font-weight: 500;
 }
 
 .fw-semibold {
-  font-weight: 600;
+	font-weight: 600;
 }
 
 .fw-bold {
-  font-weight: 700;
+	font-weight: 700;
 }
 
 .fw-extra-bold {
-  font-weight: 800;
+	font-weight: 800;
 }
 
 .fw-black {
-  font-weight: 900;
+	font-weight: 900;
 }
 
 .fst-italic {
-  font-style: italic;
+	font-style: italic;
+}
+
+/* =========================
+   RESPONSIVE TABLE
+========================= */
+.table-responsive {
+	overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 575.98px) {
+  .table-responsive-sm {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+@media (max-width: 767.98px) {
+  .table-responsive-md {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+@media (max-width: 991.98px) {
+  .table-responsive-lg {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+@media (max-width: 1199.98px) {
+  .table-responsive-xl {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+@media (max-width: 1399.98px) {
+  .table-responsive-xxl {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+@media (max-width: 1599.98px) {
+  .table-responsive-3xl {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 /* =========================
@@ -437,7 +473,7 @@ body {
 ================================== */
 .row-cols-auto {
 	flex: 0 0 auto;
-    width: auto;
+	width: auto;
 }
 
 @for $i from 1 through $flex-cols {
@@ -473,11 +509,11 @@ body {
 ================================== */
 @for $i from 1 through $offset-cols {
 	.offset-#{$i} {
-		margin-left: span($i);
+		margin-left: offset-span($i);
 	}
 
 	.offset-r-#{$i} {
-		margin-right: span($i);
+		margin-right: offset-span($i);
 	}
 }
 
@@ -485,11 +521,11 @@ body {
 	@media (min-width: $bp) {
 		@for $i from 1 through $offset-cols {
 			.offset-#{$name}-#{$i} {
-				margin-left: span($i);
+				margin-left: offset-span($i);
 			}
 
 			.offset-r-#{$name}-#{$i} {
-				margin-left: span($i);
+				margin-left: offset-span($i);
 			}
 		}
 	}
@@ -548,9 +584,11 @@ body {
 	.gap-#{$key} {
 		gap: $val;
 	}
+
 	.row-gap-#{$key} {
 		row-gap: $val;
 	}
+
 	.column-gap-#{$key} {
 		-moz-column-gap: $val;
 		column-gap: $val;
@@ -563,9 +601,11 @@ body {
 			.gap-#{$name}-#{$key} {
 				gap: $val;
 			}
+
 			.row-gap-#{$name}-#{$key} {
 				row-gap: $val;
 			}
+
 			.column-gap-#{$name}-#{$key} {
 				-moz-column-gap: $val;
 				column-gap: $val;
