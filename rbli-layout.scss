@@ -65,6 +65,14 @@ $radius: (
 	6: 24px
 );
 
+$opacity-utils: (
+	0: 0,
+	25: .25,
+	50: .5,
+	75: .75,
+	100: 1,
+);
+
 $orders: (
 	"first": -1,
 	0: 0,
@@ -163,11 +171,33 @@ $flex-utils: (
 		"baseline": baseline,
 		"stretch": stretch),
 
+	"vertical-align": ("baseline": baseline,
+		"top": top,
+		"middle": middle,
+		"bottom": bottom,
+		"text-bottom": text-bottom,
+		"text-top": text-top),
+
 	"flex-grow": (0: 0,
 		1: 1),
 
 	"flex-shrink": (0: 0,
 		1: 1)
+);
+
+$overflow-utils: (
+	"overflow": ("auto": auto,
+		"hidden": hidden,
+		"visible": visible,
+		"scroll": scroll),
+	"overflow-x": ("auto": auto,
+		"hidden": hidden,
+		"visible": visible,
+		"scroll": scroll),
+	"overflow-y": ("auto": auto,
+		"hidden": hidden,
+		"visible": visible,
+		"scroll": scroll),
 );
 
 $float-utils: (
@@ -220,12 +250,29 @@ $object-fit-utils: (
 	),
 );
 
+$position-utils: (
+	fixed-top: (position: fixed,
+		top: 0,
+		right: 0,
+		left: 0),
+	fixed-bottom: (position: fixed,
+		right: 0,
+		bottom: 0,
+		left: 0),
+	position-static: (position: static),
+	position-relative: (position: relative),
+	position-absolute: (position: absolute),
+	position-fixed: (position: fixed)
+);
+
+$steps: (8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 48, 56, 64, 72, 80);
+
 @function span($n) {
-  @return math.div(100%, $flex-cols) * $n;
+	@return math.div(100%, $flex-cols) * $n;
 }
 
 @function offset-span($n) {
-  @return math.div(100%, $offset-cols) * $n;
+	@return math.div(100%, $offset-cols) * $n;
 }
 
 /* =========================
@@ -274,9 +321,9 @@ body {
 }
 
 .clearfix::after {
-  display: block;
-  clear: both;
-  content: "";
+	display: block;
+	clear: both;
+	content: "";
 }
 
 .text-decoration-none {
@@ -347,49 +394,82 @@ body {
 	font-style: italic;
 }
 
+.text-break {
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.text-reset {
+  color: inherit;
+}
+
+.bg-transparent {
+  background-color: transparent;
+}
+
+/* =========================
+   BOX SHADOW CSS
+========================= */
+.shadow-none {
+  box-shadow: none;
+}
+
+@each $name, $bp in $breakpoints {
+	@media (min-width: $bp) {
+		.shadow-#{$name}-none {
+			box-shadow: none;
+		}
+	}
+}
+
 /* =========================
    RESPONSIVE TABLE
 ========================= */
 .table-responsive {
 	overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+	-webkit-overflow-scrolling: touch;
 }
 
 @media (max-width: 575.98px) {
-  .table-responsive-sm {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
+	.table-responsive-sm {
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
 }
+
 @media (max-width: 767.98px) {
-  .table-responsive-md {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
+	.table-responsive-md {
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
 }
+
 @media (max-width: 991.98px) {
-  .table-responsive-lg {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
+	.table-responsive-lg {
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
 }
+
 @media (max-width: 1199.98px) {
-  .table-responsive-xl {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
+	.table-responsive-xl {
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
 }
+
 @media (max-width: 1399.98px) {
-  .table-responsive-xxl {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
+	.table-responsive-xxl {
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
 }
+
 @media (max-width: 1599.98px) {
-  .table-responsive-3xl {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
+	.table-responsive-3xl {
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
 }
 
 /* =========================
@@ -555,6 +635,29 @@ body {
 }
 
 /* ==================================
+	OVERFLOW CSS
+================================== */
+@each $property, $values in $overflow-utils {
+	@each $key, $val in $values {
+		.#{$property}-#{$key} {
+			#{$property}: $val;
+		}
+	}
+}
+
+@each $name, $bp in $breakpoints {
+	@media (min-width: $bp) {
+		@each $property, $values in $overflow-utils {
+			@each $key, $val in $values {
+				.#{$property}-#{$name}-#{$key} {
+					#{$property}: $val;
+				}
+			}
+		}
+	}
+}
+
+/* ==================================
 	HEIGHT & WIDTH CSS
 ================================== */
 @each $property, $values in $height-width-utils {
@@ -571,6 +674,46 @@ body {
 			@each $key, $val in $values {
 				.#{$property}-#{$name}-#{$key} {
 					#{$property}: $val;
+				}
+			}
+		}
+	}
+}
+
+/* ==================================
+	OPACITY CSS
+================================== */
+@each $key, $val in $opacity-utils {
+	.opacity-#{$key} {
+		opacity: $val;
+	}
+}
+
+@each $name, $bp in $breakpoints {
+	@media (min-width: $bp) {
+		@each $key, $val in $opacity-utils {
+			.opacity-#{$name}-#{$key} {
+				opacity: $val;
+			}
+		}
+	}
+}
+
+/* ==================================
+	POSITION CSS
+================================== */
+@each $name, $rules in $position-utils {
+	.#{$name} {
+		@each $prop, $value in $rules {
+			#{$prop}: $value;
+		}
+	}
+
+	@each $bp-name, $bp in $breakpoints {
+		@media (min-width: $bp) {
+			.#{$name}-#{$bp-name} {
+				@each $prop, $value in $rules {
+					#{$prop}: $value;
 				}
 			}
 		}
@@ -766,6 +909,21 @@ body {
 			}
 		}
 	}
+}
+
+/* =========================
+   FONT SIZE
+========================= */
+@each $size in $steps {
+
+  .fs-#{$size} {
+    font-size: clamp(
+      #{round($size * 0.75)}px,
+      1vw + #{$size * 0.1}px,
+      #{$size}px
+    );
+  }
+
 }
 
 /* ==================================
